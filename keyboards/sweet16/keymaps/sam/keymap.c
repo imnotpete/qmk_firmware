@@ -14,10 +14,10 @@ enum custom_keycodes {
 
 enum {
 		TD_EMAIL_NOTEPAD = 0, // single tap open notepad; double type email header
-		TD_DEL_CAD, // single Del, double CAD
+		TD_DEL_CAD, // single CAD, double Del
 		TD_ESC_F12, // single Esc, double F12
-		TD_PLAY_LAYER, // single play/pause, double layer
-		TD_ENTER_LAYER // single Enter, double layer
+		TD_PLAY_LAYER, // single play/pause, triple layer
+		TD_ENTER_LAYER // single Enter, triple layer
 };
 
 #define TD_EMAIL TD(TD_EMAIL_NOTEPAD)
@@ -110,14 +110,14 @@ void dance_email_notepad(qk_tap_dance_state_t *state, void *user_data) {
 
 void dance_delete_cad(qk_tap_dance_state_t *state, void *user_data) {
 		if (state->count == 1) {
-				SEND_STRING(SS_TAP(X_DELETE));
-		} else {
 				SEND_STRING(SS_LCTRL(SS_LALT(SS_TAP(X_DELETE))));
+		} else {
+				SEND_STRING(SS_TAP(X_DELETE));
 		}
 }
 
 void dance_player(qk_tap_dance_state_t *state, void *user_data) {
-		if (state->count == 1) {
+		if (state->count <= 2) {
 				register_code(KC_MPLY);
 		} else {
 				persistent_default_layer_set(1UL<<LAYOUT_NUMPAD);
@@ -125,7 +125,7 @@ void dance_player(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void dance_layter(qk_tap_dance_state_t *state, void *user_data) {
-		if (state->count == 1) {
+		if (state->count <= 2) {
 				SEND_STRING(SS_TAP(X_ENTER));
 		} else {
 				persistent_default_layer_set(1UL<<LAYOUT_MACROS);
