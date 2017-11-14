@@ -29,9 +29,10 @@ enum {
 		TD_FN_SPACE // single Tab, double Esc
 };
 
-#define TBNXT 0
-#define TBPRV 1
-#define CAD   2
+#define TBNXT  0
+#define TBPRV  1
+#define CAD    2
+#define CTRL_W 3
 
 // Fillers to make layering more clear
 #define _______ KC_TRNS
@@ -40,6 +41,7 @@ enum {
 #define M_TBNXT M(TBNXT)
 #define M_TBPRV M(TBPRV)
 #define M_CAD   M(CAD)
+#define M_CTRLW M(CTRL_W)
 
 #define FIND    LALT(LSFT(KC_F7))
 
@@ -140,7 +142,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 * ,-----------------------------------------------------------------------------------.
 * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
 * |------+------+------+------+------+------+------+------+------+------+------+------|
-* |TabPrv|      |      |      |      |      |      | PgUp | Home | PgDn | PScr | Del  |
+* |TabPrv|      |CTRL-W|      |      |      |      | PgUp | Home | PgDn | PScr | Del  |
 * |------+------+------+------+------+-------------+------+------+------+------+------|
 * |TabNxt|      |      |      | Find |  Go  | Left | Down |  Up  |Right |      |      |
 * |------+------+------+------+------+------|------+------+------+------+------+------|
@@ -151,7 +153,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 */
 [_FN] = KEYMAP( \
 	_______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, \
-	M_TBPRV, _______, _______, _______, _______, _______, _______, KC_PGUP, KC_HOME, KC_PGDN, KC_PSCR, KC_DEL, \
+	M_TBPRV, _______, M_CTRLW, _______, _______, _______, _______, KC_PGUP, KC_HOME, KC_PGDN, KC_PSCR, KC_DEL, \
 	M_TBNXT, _______, _______, _______, FIND,    KC_F3,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______, \
 	_______, _______, _______, _______, _______, _______, KC_END,  _______, _______, _______, _______, _______, \
 	M_CAD,   _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY \
@@ -260,7 +262,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt) {
 			break;
 		case CTRL_W: 
 			if (record->event.pressed) {
-				return MACRO( D(LCTL), T(X), U(LCTL), END  ); 
+				return MACRO( D(LCTL), T(W), U(LCTL), END  ); 
 			}
 			break;
 	}
