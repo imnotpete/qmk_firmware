@@ -7,7 +7,6 @@
 enum custom_keycodes {
 	UP_URL = SAFE_RANGE,
 	CAD, // Ctrl+Alt+Del
-	CSE, // Ctrl+Shift+Esc
 	COMMENT, // HTML open comment
 	SCRSHT // Take screenshot, paste into Paint
 };
@@ -25,6 +24,7 @@ enum {
 #define TD_ESC TD(TD_ESC_F12)
 #define PLAYER TD(TD_PLAY_LAYER)
 #define LAYTER TD(TD_ENTER_LAYER)
+#define CSE LCTL(LSFT(KC_ESC))
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -72,13 +72,6 @@ void persistent_default_layer_set(uint16_t default_layer) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	switch (keycode) {
-		case CSE: 
-			if (record->event.pressed) {
-				//SEND_STRING(SS_DOWN(X_LCTRL) SS_DOWN(X_LSHIFT) SS_TAP(X_ESCAPE) SS_UP(X_LSHIFT) SS_UP(X_LCTRL));
-				SEND_STRING(SS_LCTL(SS_LSFT(SS_TAP(X_ESC)))); 
-				return false;
-			}
-			break;
 		case COMMENT: 
 			if (record->event.pressed) {
 				SEND_STRING("<!--");
