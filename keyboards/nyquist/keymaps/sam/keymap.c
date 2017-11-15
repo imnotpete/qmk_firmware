@@ -15,15 +15,16 @@ extern keymap_config_t keymap_config;
 #define _NUMPAD 6
 
 enum custom_keycodes {
-		QWERTY = SAFE_RANGE,
-		LOWER,
-		RAISE,
-		ADJUST,
-		FN,
+	QWERTY = SAFE_RANGE,
+	LOWER,
+	RAISE,
+	ADJUST,
+	FN,
 };
 
 enum {
-		TD_TAB_ESC = 0, // single Tab, double Esc
+	TD_TAB_ESC = 0, // single Tab, double Esc
+	TD_ESC_CTRL, // single Esc, hold Ctrl
 };
 
 // Fillers to make layering more clear
@@ -38,30 +39,31 @@ enum {
 #define FN_SPC LT(_FN, KC_SPC)
 #define RS_SPC LT(_RAISE, KC_SPC)
 #define LW_SPC LT(_LOWER, KC_SPC)
-#define NUMPAD MO(_NUMPAD)
+#define NUMPAD LT(_NUMPAD, KC_TAB)
 #define TD_TAB TD(TD_TAB_ESC)
+#define TD_ESC TD(TD_ESC_CTRL)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Qwerty
  * ,-----------------------------------------------------------------------------------.
- * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Del  |
+ * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | CAD  |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Tab  |   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bspc |
+ * |TabNum|   Q  |   W  |   E  |   R  |   T  |   Y  |   U  |   I  |   O  |   P  | Bspc |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Esc  |   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  "   |
+ * |EscCtl|   A  |   S  |   D  |   F  |   G  |   H  |   J  |   K  |   L  |   ;  |  "   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift|   Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  |   /  |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Ctrl |NumPad| GUI  | Alt  |Lower |FnSpce|FnSpce|Raise | Home | PgDn | PgUp | End  |
+ * |      |      | GUI  | Alt  |Space |FnSpce|FnSpce|Raise |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = KEYMAP( \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
-  KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
-  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT , \
-  KC_LCTL, NUMPAD,  KC_LGUI, KC_LALT, LW_SPC,  FN_SPC,  FN_SPC,  RS_SPC,  KC_HOME, KC_PGDN, KC_PGUP, KC_END \
+  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    CAD, \
+  NUMPAD,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  TD_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
+  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT, \
+  _______, _______, KC_LGUI, KC_LALT, KC_SPC,  FN_SPC,  FN_SPC,  RS_SPC,  _______, _______, _______, _______ \
 ),
 
 /* Lower
@@ -70,13 +72,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |   ~  |   !  |   @  |   #  |   $  |   %  |   ^  |   &  |   *  |   (  |   )  | Del  |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   _  |   +  |     |    \  |  |   |
+ * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   _  |   +  |      |    \  |  |   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO ~ |ISO | |      |      |Enter |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
  * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
  * `-----------------------------------------------------------------------------------'
- */
 [_LOWER] = KEYMAP( \
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, \
@@ -84,47 +85,48 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,S(KC_NUHS),S(KC_NUBS),_______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY \
 ),
+ */
 
 /* Raise
  * ,-----------------------------------------------------------------------------------.
- * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
+ * |      |      |      |      |      |      |      |      |      |   (  |   )  |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Del  |
+ * |      |      |      |      |      |      |      |   _  |   +  |   {  |   }  |  |   |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * | Del  |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |   -  |   =  |   [  |   ]  |  \   |
+ * |      |      |      |      |      |      |      |   -  |   =  |   [  |   ]  |  \   |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
- * |      |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |ISO # |ISO / |      |      |Enter |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+ * |      |      |      |      |      |      |      |      |      |      |      |      |
  * `-----------------------------------------------------------------------------------'
  */
 [_RAISE] = KEYMAP( \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
-  KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_NUHS, KC_NUBS, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_LPRN, KC_RPRN, _______, \
+  _______, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
+  _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
 
 /* Fn
 * ,-----------------------------------------------------------------------------------.
-* |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
+* |  F12 |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |  F7  |  F8  |  F9  |  F10 |  F11 | 
 * |------+------+------+------+------+------+------+------+------+------+------+------|
 * |TabPrv|      |Ctrl-W|      |      |      |      | PgUp | Home | PgDn | PScr | Del  |
 * |------+------+------+------+------+-------------+------+------+------+------+------|
 * |TabNxt|      |      |      | Find |  Go  | Left | Down |  Up  |Right |      |      |
 * |------+------+------+------+------+------|------+------+------+------+------+------|
-* |      |      |      |      |      |      |  End |      |      |      |      |Enter |
+* |      |      |      |      |      |      |  End |      |      |      |      |      |
 * |------+------+------+------+------+------+------+------+------+------+------+------|
-* |      |      |      |      |      |             |      | Next | Vol- | Vol+ | Play |
+* |      |      |      |      |      |             |      |      |      |      |      |
 * `-----------------------------------------------------------------------------------'
 */
 [_FN] = KEYMAP( \
-	_______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, \
+	KC_F12, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, \
 	TBPRV,   _______, CTRLW,   _______, _______, _______, _______, KC_PGUP, KC_HOME, KC_PGDN, KC_PSCR, KC_DEL, \
 	TBNXT,   _______, _______, _______, FIND,    KC_F3,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______, \
 	_______, _______, _______, _______, _______, _______, KC_END,  _______, _______, _______, _______, _______, \
-	CAD,     _______, _______, _______, _______, _______, _______, _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY \
+	CAD,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
 
 /* NumPad
@@ -135,7 +137,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 * |------+------+------+------+------+------|------+------+------+------+------+------|
 * |      |      |      |      |      |      |      |  1   |  2   |  3   |  +   |      |
 * |------+------+------+------+------+------+------+------+------+------+------+------|
-* |      |      |      |      |      |      |      |  0   |      |  .   |  /   |      |
+* |      |      |      |      |      |      |      |  0   |Enter |  .   |  /   |      |
 * |------+------+------+------+------+------+------+------+------+------+------+------|
 * |      |      |      |      |      |             |      |      |      |      |      |
 * `-----------------------------------------------------------------------------------'
@@ -159,6 +161,73 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	return true;
 }
 
+
+//**************** Definitions needed for quad function to work *********************//
+//Enums used to clearly convey the state of the tap dance
+enum {
+  SINGLE_TAP = 1,
+  SINGLE_HOLD = 2,
+  DOUBLE_TAP = 3,
+  DOUBLE_HOLD = 4, 
+  DOUBLE_SINGLE_TAP = 5 //send SINGLE_TAP twice - NOT DOUBLE_TAP
+  // Add more enums here if you want for triple, quadruple, etc. 
+};
+
+typedef struct {
+  bool is_press_action;
+  int state;
+} tap;
+
+int cur_dance (qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    //If count = 1, and it has been interrupted - it doesn't matter if it is pressed or not: Send SINGLE_TAP
+    if (state->interrupted || state->pressed==0) return SINGLE_TAP;
+    else return SINGLE_HOLD;
+  }
+  //If count = 2, and it has been interrupted - assume that user is trying to type the letter associated
+  //with single tap. In example below, that means to send `xx` instead of `Escape`.
+  else if (state->count == 2) {
+    if (state->interrupted) return DOUBLE_SINGLE_TAP;
+    else if (state->pressed) return DOUBLE_HOLD;
+    else return DOUBLE_TAP;
+  } 
+  else return 6; //magic number. At some point this method will expand to work for more presses
+}
+
+//**************** Definitions needed for quad function to work *********************//
+
+//instanalize an instance of 'tap' for the 'x' tap dance.
+static tap esc_tap_state = { 
+  .is_press_action = true,
+  .state = 0
+};
+
+void esc_finished (qk_tap_dance_state_t *state, void *user_data) {
+  esc_tap_state.state = cur_dance(state);
+  switch (esc_tap_state.state) {
+    case SINGLE_TAP: register_code(KC_ESC); break;
+    case SINGLE_HOLD: register_code(KC_LCTRL); break;
+   // case DOUBLE_TAP: register_code(KC_ESC); break;
+   // case DOUBLE_HOLD: register_code(KC_LALT); break;
+   // case DOUBLE_SINGLE_TAP: register_code(KC_X); unregister_code(KC_X); register_code(KC_X);
+    //Last case is for fast typing. Assuming your key is `f`:
+    //For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
+    //In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
+  }
+}
+
+void esc_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (esc_tap_state.state) {
+    case SINGLE_TAP: unregister_code(KC_ESC); break;
+    case SINGLE_HOLD: unregister_code(KC_LCTRL); break;
+//    case DOUBLE_TAP: unregister_code(KC_ESC); break;
+//    case DOUBLE_HOLD: unregister_code(KC_LALT);
+//    case DOUBLE_SINGLE_TAP: unregister_code(KC_X);
+  }
+  esc_tap_state.state = 0;
+}
+
 qk_tap_dance_action_t tap_dance_actions[] = {
-	[TD_TAB_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_TAB, KC_ESC)
+	[TD_TAB_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_TAB, KC_ESC),
+	[TD_ESC_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, esc_finished, esc_reset)
 };
