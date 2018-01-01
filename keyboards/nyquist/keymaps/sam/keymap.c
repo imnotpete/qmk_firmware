@@ -195,8 +195,6 @@ int cur_dance (qk_tap_dance_state_t *state) {
 }
 
 //**************** Definitions needed for quad function to work *********************//
-
-//instanalize an instance of 'tap' for the 'x' tap dance.
 static tap esc_tap_state = { 
   .is_press_action = true,
   .state = 0
