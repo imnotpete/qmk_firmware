@@ -27,6 +27,7 @@ enum {
 #define TBPRV  LCTL(KC_PGUP)
 #define CAD    LCTL(LALT(KC_DEL))
 #define CTRLW  LCTL(KC_W)
+#define CTRLT  LCTL(KC_T)
 #define FIND   LALT(LSFT(KC_F7))
 #define FN_SPC LT(_FN, KC_SPC)
 #define RS_SPC LT(_RAISE, KC_SPC)
@@ -46,6 +47,7 @@ enum {
 #define KC_TPRV TBPRV
 #define KC_TNXT TBNXT
 #define KC_CTLW CTRLW
+#define KC_CTLT CTRLT
 #define KC_FIND FIND
 #define KC_LOWR LOWER
 #define KC_RASE RAISE
@@ -58,13 +60,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      GRV , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     NUMP, Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,DEL ,
+     NUMP, Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,BSLS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      TESC, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,QUOT,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LSFT, Z  , X  , C  , V  , B  ,FSPC,     FSPC, N  , M  ,COMM,DOT ,SLSH,RGHT,
+     LSFT, Z  , X  , C  , V  , B  ,FSPC,     FSPC, N  , M  ,COMM,DOT ,SLSH,ENT ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,LALT,FSPC ,        FSPC,RSPC,LALT
+                       LGUI,LALT,FSPC ,        FSPC,RSPC,CAD
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -86,7 +88,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      F12 , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,F11 ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TPRV,    ,CTLW,    ,    ,    ,                   ,PGUP,HOME,PGDN,PSCR,DEL ,
+     TPRV,    ,CTLW,    ,    ,CTLT,                   ,PGUP,HOME,PGDN,PSCR,DEL ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      TNXT,    ,    ,    ,FIND, F3 ,               LEFT,DOWN, UP ,RGHT,    ,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
@@ -118,6 +120,38 @@ void persistent_default_layer_set(uint16_t default_layer) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	return true;
+}
+
+//**************** Definitions needed for quad function to work *********************//
+//Enums used to clearly convey the state of the tap dance
+enum {
+  SINGLE_TAP = 1,
+  SINGLE_HOLD = 2,
+  DOUBLE_TAP = 3,
+  DOUBLE_HOLD = 4, 
+  DOUBLE_SINGLE_TAP = 5 //send SINGLE_TAP twice - NOT DOUBLE_TAP
+  // Add more enums here if you want for triple, quadruple, etc. 
+};
+
+typedef struct {
+  bool is_press_action;
+  int state;
+} tap;
+
+int cur_dance (qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    //If count = 1, and it has been interrupted - it doesn't matter if it is pressed or not: Send SINGLE_TAP
+    if (state->interrupted || state->pressed==0) return SINGLE_TAP;
+    else return SINGLE_HOLD;
+  }
+  //If count = 2, and it has been interrupted - assume that user is trying to type the letter associated
+  //with single tap. In example below, that means to send `xx` instead of `Escape`.
+  else if (state->count == 2) {
+    if (state->interrupted) return DOUBLE_SINGLE_TAP;
+    else if (state->pressed) return DOUBLE_HOLD;
+    else return DOUBLE_TAP;
+  } 
+  else return 6; //magic number. At some point this method will expand to work for more presses
 }
 
 //**************** Definitions needed for quad function to work *********************//
