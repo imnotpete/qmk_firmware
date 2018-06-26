@@ -20,12 +20,14 @@ enum custom_keycodes {
 
 enum {
 	TD_TAB_ESC = 0, // single Tab, double Esc
+	TD_CAD_CSE, // single Tab, double Esc
 	TD_ESC_CTRL, // single Esc, hold Ctrl
 };
 
 #define TBNXT  LCTL(KC_PGDN)
 #define TBPRV  LCTL(KC_PGUP)
 #define CAD    LCTL(LALT(KC_DEL))
+#define CSE    LCTL(LSFT(KC_ESC))
 #define CTRLW  LCTL(KC_W)
 #define CTRLT  LCTL(KC_T)
 #define FIND   LALT(LSFT(KC_F7))
@@ -34,6 +36,7 @@ enum {
 #define LW_SPC LT(_LOWER, KC_SPC)
 #define NUMPAD LT(_NUMPAD, KC_TAB)
 #define TD_TAB TD(TD_TAB_ESC)
+#define TD_CCE TD(TD_CAD_CSE)
 #define TD_ESC TD(TD_ESC_CTRL)
 
 #define KC_ KC_TRNS
@@ -43,7 +46,9 @@ enum {
 #define KC_FSPC FN_SPC
 #define KC_RSPC RS_SPC
 #define KC_CAD CAD
+#define KC_CSE CSE
 #define KC_TESC TD_ESC
+#define KC_TCCE TD_CCE
 #define KC_TPRV TBPRV
 #define KC_TNXT TBNXT
 #define KC_CTLW CTRLW
@@ -64,9 +69,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      TESC, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,QUOT,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LSFT, Z  , X  , C  , V  , B  ,FSPC,     FSPC, N  , M  ,COMM,DOT ,SLSH,ENT ,
+     LSFT, Z  , X  , C  , V  , B  ,FSPC,     NUMP, N  , M  ,COMM,DOT ,SLSH,ENT ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LGUI,LALT,FSPC ,        FSPC,RSPC,CAD
+                       LGUI,LALT,FSPC ,        FSPC,RSPC,TCCE
   //                  `----+----+----'        `----+----+----'
   ),
 
@@ -187,5 +192,6 @@ void esc_reset (qk_tap_dance_state_t *state, void *user_data) {
 
 qk_tap_dance_action_t tap_dance_actions[] = {
 	[TD_TAB_ESC] = ACTION_TAP_DANCE_DOUBLE(KC_TAB, KC_ESC),
+	[TD_CAD_CSE] = ACTION_TAP_DANCE_DOUBLE(KC_CAD, KC_CSE),
 	[TD_ESC_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, esc_finished, esc_reset)
 };
