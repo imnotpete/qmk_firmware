@@ -25,6 +25,7 @@ enum {
 #define PLAYER TD(TD_PLAY_LAYER)
 #define LAYTER TD(TD_ENTER_LAYER)
 #define CSE LCTL(LSFT(KC_ESC))
+#define OUT LSFT(KC_F11)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -41,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [LAYOUT_MACROS] = KEYMAP(
 	TD_ESC,  COMMENT, TD_EMAIL, SCRSHT,
-	KC_F5,   KC_F6,   KC_F7,    KC_F8,
+	KC_F11,  KC_F10,  OUT,      KC_F8,
 	KC_MUTE, KC_VOLD, KC_VOLU,  CSE,
 	KC_MPRV, PLAYER,  KC_MNXT,  TD_DEL 
 ), 
