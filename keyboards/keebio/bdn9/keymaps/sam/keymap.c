@@ -16,6 +16,17 @@
 #include QMK_KEYBOARD_H
 #include "emailHeader.h"
 
+#ifdef AUDIO_ENABLE
+	float music_scale[][2]     = SONG(MUSIC_SCALE_SOUND);
+	float lp_numb[][2]     = SONG(LP_NUMB);
+	float close_encounters[][2]     = SONG(CLOSE_ENCOUNTERS_5_NOTE);
+	float imperial_march[][2]     = SONG(IMPERIAL_MARCH);
+	float mario_theme[][2]     = SONG(MARIO_THEME);
+
+	int songIndex = 0;
+#endif
+
+
 enum custom_keycodes {
 	UP_URL = SAFE_RANGE,
 	SCRSHT // Take screenshot, paste into Paint
@@ -32,7 +43,7 @@ enum {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
-        KC_MUTE, TD_EMAIL, KC_MPLY, \
+        KC_MUTE, TD_EMAIL, MU_TOG, \
         TD_ESC,  KC_F8,    SCRSHT, \
         KC_F11,  KC_F10,   OUT  \
     ),
@@ -48,17 +59,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void encoder_update_user(uint8_t index, bool clockwise) {
     if (index == 0) {
         if (clockwise) {
-            tap_code(KC_VOLU);
-        } else {
             tap_code(KC_VOLD);
-        }
-    }
-    else if (index == 1) {
-        if (clockwise) {
-            tap_code(KC_PGDN);
         } else {
-            tap_code(KC_PGUP);
+            tap_code(KC_VOLU);
         }
+    } else if (index == 1) {
+        if (clockwise) {
+        } else {
+			if (songIndex>=4) {
+				songIndex = 0;
+			} else {
+				songIndex++;
+			}
+        }
+
+		switch (songIndex) {
+		case 0:
+			PLAY_SONG(music_scale);
+			break;
+		case 1:
+			PLAY_SONG(lp_numb);
+			break;
+		case 2:
+			PLAY_SONG(close_encounters);
+			break;
+		case 3:
+			PLAY_SONG(imperial_march);
+			break;
+		case 4:
+			PLAY_SONG(mario_theme);
+			break;
+		}
     }
 }
 
@@ -67,9 +98,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case SCRSHT: 
 			if (record->event.pressed) {
 				SEND_STRING(SS_TAP(X_PSCREEN) SS_LGUI("r"));
-				_delay_ms(750);
+				wait_ms(750);
 				SEND_STRING("mspaint" SS_TAP(X_ENTER));
-				_delay_ms(750);
+				wait_ms(750);
 				SEND_STRING(SS_LCTRL("v"));
 				return false;
 			}
@@ -81,7 +112,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 void dance_email_notepad(qk_tap_dance_state_t *state, void *user_data) {
 	if (state->count == 1) {
 		SEND_STRING(SS_LGUI("r"));
-		_delay_ms(750);
+		wait_ms(750);
 		SEND_STRING("notepad" SS_TAP(X_ENTER));
 	} else {
 		send_string(my_str);
