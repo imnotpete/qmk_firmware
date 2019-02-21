@@ -82,9 +82,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 		case SCRSHT: 
 			if (record->event.pressed) {
 				SEND_STRING(SS_TAP(X_PSCREEN) SS_LGUI("r"));
-				_delay_ms(750);
+				wait_ms(750);
 				SEND_STRING("mspaint" SS_TAP(X_ENTER));
-				_delay_ms(750);
+				wait_ms(750);
 				SEND_STRING(SS_LCTRL("v"));
 				return false;
 			}
@@ -96,7 +96,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 void dance_email_notepad(qk_tap_dance_state_t *state, void *user_data) {
 	if (state->count == 1) {
 		SEND_STRING(SS_LGUI("r"));
-		_delay_ms(750);
+		wait_ms(750);
 		SEND_STRING("notepad" SS_TAP(X_ENTER));
 	} else {
 		send_string(my_str);
